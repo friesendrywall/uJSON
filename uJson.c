@@ -79,7 +79,14 @@ void uJson_Minify(char *json) {
   *into = 0; /* and null-terminate. */
 }
 
-int uJsonEmitter(char * json, uJsonCallback cb) {
+/**
+ * 
+ * @param json null terminated JSON
+ * @param cb callback
+ * @param ctx optional callback param
+ * @return UJSON_ERR
+ */
+int uJsonEmitter(char * json, uJsonCallback cb, void * ctx) {
   int i, j, ar;
   char levels[UJSON_MAX_LEVELS][UJSON_MAX_OBJ_LENGTH + 1] = {0};
   char value[UJSON_MAX_OBJ_LENGTH + 1] = {0};
@@ -106,7 +113,7 @@ int uJsonEmitter(char * json, uJsonCallback cb) {
       if(st == ST_OBJ_VALUE){
         value[j] = 0;
         fillObjString(name, levels, sizeof(name), braces, -1);
-        cb(name, value);
+        cb(name, value, ctx);
         st = ST_OBJ_NEXT;
       }
       braces--;
@@ -150,12 +157,12 @@ int uJsonEmitter(char * json, uJsonCallback cb) {
         if (json[i] == '"') {
           value[j] = 0;
           fillObjString(name, levels, sizeof(name), braces, -1);
-          cb(name, value);
+          cb(name, value, ctx);
           st = ST_OBJ_NEXT;
         } else if (json[i] == ',') {
           value[j] = 0;
           fillObjString(name, levels, sizeof(name), braces, -1);
-          cb(name, value);
+          cb(name, value, ctx);
           st = ST_OBJ_NAME_ST;
         } else {
           value[j++] = json[i];
@@ -168,12 +175,12 @@ int uJsonEmitter(char * json, uJsonCallback cb) {
         if (json[i] == ']') {
           value[j] = 0;
           fillObjString(name, levels, sizeof(name), braces, ar);
-          cb(name, value);
+          cb(name, value, ctx);
           st = ST_OBJ_NEXT;
         } else if (json[i] == ',') {
           value[j] = 0;
           fillObjString(name, levels, sizeof(name), braces, ar);
-          cb(name, value);
+          cb(name, value, ctx);
           j = 0;
           ar++;
         } else {

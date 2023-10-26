@@ -10,18 +10,20 @@ Rather than parse into tokens or a tree, this library inverts the
 operation and uses a callback that the user function can use to
 handle the parsed values.  All values are null terminated strings.
 
+
 ## Usage
 Provide a callback
 ```
-void foundValues(char * name, char * value){
+void foundValues(char * name, char * value, void * ctx){
   printf("%s = %s\r\n", name, value);
+  /* ctx optional to fill a variable */
 }
 ```
 
 Parse the JSON.
 ```
 uJson_Minify(testData4);/* Minify required */
-int res = uJsonEmitter(json, foundValues);
+int res = uJsonEmitter(json, foundValues, NULL);
 ```
 
 ```json

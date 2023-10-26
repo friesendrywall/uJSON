@@ -30,9 +30,9 @@ SOFTWARE.
 #ifndef UJSON_H
 #define UJSON_H
 
-typedef void (*uJsonCallback) (char * emitName, char * emitValue);
+typedef void (*uJsonCallback) (char * emitName, char * emitValue, void * ctx);
 void uJson_Minify(char *json);
-int uJsonEmitter(char * json, uJsonCallback cb);
+int uJsonEmitter(char * json, uJsonCallback cb, void * ctx);
 
 #define UJSON_MAX_OBJ_LENGTH 8
 #define UJSON_MAX_LEVELS 3

@@ -78,16 +78,27 @@ unsigned char testData4[340] = {
     0x0D, 0x0A, 0x7D, 0x00 
 };
 
+typedef struct {
+  float bt;
+  float et;  
+} test_t;
 
-void foundValues(char * name, char * value){
+void foundValues(char * name, char * value, void * ctx) {
+  test_t * t = (test_t*) ctx;
   printf("%s = %s\r\n", name, value);
+  if (memcmp(name, "bt", 2) == 0) {
+    t->bt = strtof(value, NULL);
+  } else if (memcmp(name, "et", 2) == 0) {
+    t->et = strtof(value, NULL);
+  }
 }
 
 int main(int argc, char** argv) {
-
+  test_t test = {0};
   printf("Parsing\r\n%s\r\n", testData4);
   uJson_Minify(testData4);
-  int res = uJsonEmitter(testData4, foundValues);
+  int res = uJsonEmitter(testData4, foundValues, &test);
+  printf("test.bt = %f\r\ntest.et = %f\r\n", test.bt, test.et);
   return (EXIT_SUCCESS);
 }
 
